@@ -1390,6 +1390,59 @@ public class CPUHotplug implements Constants {
     public static boolean hasBluPlug() {
         return Utils.existFile(HOTPLUG_BLU_PLUG);
     }
+    
+    public static void setAiOHotplugOnline(int value, Context context) {
+        Control.runCommand(String.valueOf(value), AIO_HOTPLUG_ONLINE, Control.CommandType.GENERIC, context);
+    }
+
+    public static int getAiOHotplugOnline() {
+        return Utils.stringToInt(Utils.readFile(AIO_HOTPLUG_ONLINE));
+    }
+
+    public static boolean hasAiOHotplugOnline() {
+        return Utils.existFile(AIO_HOTPLUG_ONLINE);
+    }
+    
+   public static void setAiOHotplugBig(int value, Context context) {
+        Control.runCommand(String.valueOf(value), AIO_HOTPLUG_BIG, Control.CommandType.GENERIC, context);
+    }
+
+    public static int getAiOHotplugBig() {
+        return Utils.stringToInt(Utils.readFile(AIO_HOTPLUG_BIG));
+    }
+
+    public static boolean hasAiOHotplugBig() {
+        return Utils.existFile(AIO_HOTPLUG_BIG);
+    }
+    
+    public static void setAiOHotplugLittle(int value, Context context) {
+        Control.runCommand(String.valueOf(value), AIO_HOTPLUG_LITTLE, Control.CommandType.GENERIC, context);
+    }
+
+    public static int getAiOHotplugLittle() {
+        return Utils.stringToInt(Utils.readFile(AIO_HOTPLUG_LITTLE));
+    }
+
+    public static boolean hasAiOHotplugLittle() {
+        return Utils.existFile(AIO_HOTPLUG_LITTLE);
+    }
+    
+    public static void activateAiOHotplug(boolean active, Context context) {
+        Control.runCommand(active ? "1" : "0", AIO_HOTPLUG_ENABLE, Control.CommandType.GENERIC, context);
+        if (active) togglehotplugs("AiOHotplug", context);
+    }
+
+    public static boolean isAiOHotplugActive() {
+        return Utils.readFile(AIO_HOTPLUG_ENABLE).equals("1");
+    }
+
+    public static boolean hasAiOHotplugEnable() {
+        return Utils.existFile(AIO_HOTPLUG_ENABLE);
+    }
+
+    public static boolean hasAiOHotplug() {
+        return Utils.existFile(AIO_HOTPLUG_ENABLE);
+    }
 
     public static void setIntelliPlugFShift(int value, Context context) {
         Control.runCommand(String.valueOf(value), HOTPLUG_INTELLI_PLUG_5_FSHIFT, Control.CommandType.GENERIC, context);
@@ -1726,7 +1779,8 @@ public class CPUHotplug implements Constants {
         if (CPUHotplug.isDynPlugActive() && hasDynPlugEnable() && !activehotplug.equals("DynPlug")) Control.runCommand("N", HOTPLUG_DYN_PLUG_ENABLE, Control.CommandType.GENERIC, context);
         if (CPUHotplug.isAutoHotplugActive() && hasAutoHotplugEnable() && !activehotplug.equals("AutoHotplug")) Control.runCommand("N", HOTPLUG_AUTO_HOTPLUG_ENABLE, Control.CommandType.GENERIC, context);
         if (CPUHotplug.isHimaActive() && hasHimaEnable() && !activehotplug.equals("Hima")) Control.runCommand("N", HIMA_HOTPLUG_ENABLE, Control.CommandType.GENERIC, context);
-    }
+        if (CPUHotplug.isAiOHotplugActive() && hasAiOHotplugEnable() && !activehotplug.equals("AiOHotplug")) Control.runCommand("0", AIO_HOTPLUG_ENABLE, Control.CommandType.GENERIC, context);
+        }
 
     public static boolean hasMSMSleeper () {
         return Utils.existFile(MSM_SLEEPER);

@@ -381,14 +381,21 @@
     <string name="bch_summary">Lord Boefflas solution for keeping big cores alive</string>
     <string name="msm_max_cores">Maximum cores to be allowed online.</string>
     <string name="msmperformance">MSM Performance Hotplug</string>
-
     <string name="hima">Hima Hotplug</string>
     <string name="hima_summary">Hotplug Driver ported from HTC m9</string>
     <string name="hima_min_cpu_online">Minimum CPUs online at anytime.</string>
     <string name="hima_max_cpu_online">Maximum CPUs online at anytime</string>
     <string name="hima_sampling_rate">Defer Sampling</string>
     <string name="hima_profile_summary">Hotplug Style</string>
-
+    <string name="aiohotplug">AiO HotPlug</string>
+    <string name="aiohotplug_summary">An All in One HotPlug, developed by Shoaib Anwar a.k.a. Shoaib0597, for all main types of SoCs.</string>
+    <string name="aiohotplug_online">Number of Online Cores</string>
+    <string name="aiohotplug_online_summary">Maximum no. of cores online</string>
+    <string name="aiohotplug_big">big Cluster</string>
+    <string name="aiohotplug_big_summary">Set the Number of Online Cores. At value 0, the entire Cluster will be switched off (only if atleast 1 LITTLE Core is active and HotPlug Boost Toggle (available in CPU TAB) is Enabled).</string>    
+    <string name="aiohotplug_little">LITTLE Cluster</string>
+    <string name="aiohotplug_little_summary">Set the Number of Online Cores. At value 0, the entire Cluster will be switched off (only if atleast 1 big Core is active).</string>    
+    
     <!-- Thermal -->
     <string name="thermal_info">Use only one thermal driver from the following options, using more at the same time may cause unexpected behavior.</string>
     <string name="thermald">Thermald</string>

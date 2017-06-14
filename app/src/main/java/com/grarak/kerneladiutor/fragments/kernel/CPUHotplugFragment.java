@@ -186,7 +186,10 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
     private SwitchCardView.DSwitchCard mHimaEnableCard;
     private SeekBarCardView.DSeekBarCard mHimaMinCpusCard, mHimaMaxCpusCard, mHimaSamplingRateCard;
     private PopupCardView.DPopupCard mHimaProfileCard;
-
+    
+    private SwitchCardView.DSwitchCard mAiOHotplugEnableCard;
+    private SeekBarCardView.DSeekBarCard mAiOHotplugOnlineCard, mAiOHotplugBigCard, mAiOHotplugLittleCard;
+    
     @Override
     public void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
@@ -209,6 +212,7 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
         if (CPUHotplug.hasbch()) bchInit();
         if (CPUHotplug.hasmsmperformance()) msmperformanceInit();
         if (CPUHotplug.hasHima()) himaInit();
+        if (CPUHotplug.hasAiOHotplugEnable()) AiOHotplugInit();
         tunablesInit();
     }
 
@@ -424,6 +428,18 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
             mHimaEnableCard.setOnDSwitchCardListener(this);
 
             addView(mHimaEnableCard);
+        }
+    }
+    
+    private void AiOHotplugInit() {
+        if (CPUHotplug.hasAiOHotplugEnable()) {
+            mAiOHotplugEnableCard = new SwitchCardView.DSwitchCard();
+            mAiOHotplugEnableCard.setTitle(getString(R.string.aiohotplug));
+            mAiOHotplugEnableCard.setDescription(getString(R.string.aiohotplug_summary));
+            mAiOHotplugEnableCard.setChecked(CPUHotplug.isAiOHotplugActive());
+            mAiOHotplugEnableCard.setOnDSwitchCardListener(this);
+
+            addView(mAiOHotplugEnableCard);
         }
     }
 
@@ -2175,8 +2191,57 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
 
                 views.add(mHimaSamplingRateCard);
             }
+		} 
+             
+            //Aio HoutPlug Tunables
+            if (CPUHotplug.isAiOHotplugActive() || (!CPUHotplug.hasAiOHotplugEnable() && CPUHotplug.hasAiOHotplug())) {
+            DDivider mAiOHotplugDividerCard = new DDivider();
+            mAiOHotplugDividerCard.setText(getString(R.string.aiohotplug));
+            if (!CPUHotplug.hasAiOHotplugEnable() && CPUHotplug.hasAiOHotplug()) {
+                mAiOHotplugDividerCard.setDescription(getString(R.string.no_enable_toggle));
+            }
+            views.add(mAiOHotplugDividerCard);
 
-        }
+            }
+            
+           if (CPUHotplug.hasAiOHotplugOnline()) {
+                List<String> list = new ArrayList<>();
+                for (int i = 1; i <= 4; i++) list.add(String.valueOf(i));
+
+                mAiOHotplugOnlineCard = new SeekBarCardView.DSeekBarCard(list);
+                mAiOHotplugOnlineCard.setTitle(getString(R.string.aiohotplug_online));
+                mAiOHotplugOnlineCard.setDescription(getString(R.string.aiohotplug_online_summary));
+                mAiOHotplugOnlineCard.setProgress(CPUHotplug.getAiOHotplugOnline());
+                mAiOHotplugOnlineCard.setOnDSeekBarCardListener(this);
+
+                views.add(mAiOHotplugOnlineCard);
+            }
+            
+           if (CPUHotplug.hasAiOHotplugBig()) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i <= (CPU.getCoreCount() - 4); i++) list.add(String.valueOf(i));
+
+                mAiOHotplugBigCard = new SeekBarCardView.DSeekBarCard(list);
+                mAiOHotplugBigCard.setTitle(getString(R.string.aiohotplug_big));
+                mAiOHotplugBigCard.setDescription(getString(R.string.aiohotplug_big_summary));
+                mAiOHotplugBigCard.setProgress(CPUHotplug.getAiOHotplugBig());
+                mAiOHotplugBigCard.setOnDSeekBarCardListener(this);
+
+                views.add(mAiOHotplugBigCard);
+            }
+            
+          if (CPUHotplug.hasAiOHotplugLittle()) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i <= 4; i++) list.add(String.valueOf(i));
+
+                mAiOHotplugLittleCard = new SeekBarCardView.DSeekBarCard(list);
+                mAiOHotplugLittleCard.setTitle(getString(R.string.aiohotplug_little));
+                mAiOHotplugLittleCard.setDescription(getString(R.string.aiohotplug_little_summary));
+                mAiOHotplugLittleCard.setProgress(CPUHotplug.getAiOHotplugLittle());
+                mAiOHotplugLittleCard.setOnDSeekBarCardListener(this);
+
+                views.add(mAiOHotplugLittleCard);
+            }
 
         if (views.size() > 0) {
             addAllViews(views);
@@ -2249,6 +2314,8 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
             CPUHotplug.activatebch(checked, getActivity());
         else if (dSwitchCard == mHimaEnableCard)
             CPUHotplug.activateHima(checked, getActivity());
+        else if (dSwitchCard == mAiOHotplugEnableCard)
+            CPUHotplug.activateAiOHotplug(checked, getActivity());
         view.invalidate();
         getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
 
@@ -2489,5 +2556,11 @@ public class CPUHotplugFragment extends RecyclerViewFragment implements
             CPUHotplug.setHimaMaxOnline(position + 1, getActivity());
         else if (dSeekBarCard == mHimaSamplingRateCard)
             CPUHotplug.setHimaSamplingRate(position, getActivity());
+        else if (dSeekBarCard == mAiOHotplugOnlineCard)
+             CPUHotplug.setAiOHotplugOnline(position, getActivity());
+        else if (dSeekBarCard == mAiOHotplugBigCard)
+             CPUHotplug.setAiOHotplugBig(position, getActivity());
+        else if (dSeekBarCard == mAiOHotplugLittleCard)
+             CPUHotplug.setAiOHotplugLittle(position, getActivity());
     }
 }
